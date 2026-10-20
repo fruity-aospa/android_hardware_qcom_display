@@ -95,9 +95,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
     debug.sf.late.app.duration=13666666 \
     debug.sf.early.app.duration=13666666 \
     debug.sf.earlyGl.app.duration=13666666 \
-    debug.sf.early.sf.duration=10500000 \
-    debug.sf.earlyGl.sf.duration=10500000 \
-    debug.sf.late.sf.duration=10500000 \
+    debug.sf.early.sf.duration?=10500000 \
+    debug.sf.earlyGl.sf.duration?=10500000 \
+    debug.sf.late.sf.duration?=10500000 \
     vendor.display.enable_async_vds_creation=1 \
     vendor.display.enable_rounded_corner=1 \
     vendor.display.disable_3d_adaptive_tm=1 \
@@ -150,7 +150,7 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += ro.surface_flinger.game_default_frame_rate
 
 #BG blur support
 ifeq ($(filter $(TARGET_BOARD_PLATFORM), pitti volcano), $(TARGET_BOARD_PLATFORM))
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += ro.surface_flinger.supports_background_blur=0
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += ro.surface_flinger.supports_background_blur?=0
 else
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += ro.surface_flinger.supports_background_blur=1
 endif
