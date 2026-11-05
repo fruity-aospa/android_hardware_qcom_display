@@ -2,6 +2,8 @@
 include hardware/qcom/display/config/display-modules.mk
 PRODUCT_PACKAGES += $(DISPLAY_MODULES_HARDWARE)
 
+# asteroids: skip generic color configs if provided by device
+ifneq ($(TARGET_BOARD_PLATFORM),volcano)
 #Multi-stc libraries config xml file
 PRODUCT_COPY_FILES += hardware/qcom/display/config/snapdragon_color_libs_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/snapdragon_color_libs_config.xml
 
@@ -12,6 +14,7 @@ ifeq (,$(wildcard $(QCPATH)/display-prebuilts-noship))
 endif
 else
 PRODUCT_COPY_FILES += hardware/qcom/display/config/clstc_config_library.xml:$(TARGET_COPY_OUT_VENDOR)/etc/clstc_config_library.xml
+endif
 endif
 
 #QDCM calibration json file for r66451 panel
@@ -61,6 +64,8 @@ PRODUCT_COPY_FILES += hardware/qcom/display/config/backlight_calib_vtdr6130_amol
 #Smomo config xml file
 PRODUCT_COPY_FILES += hardware/qcom/display/config/smomo_setting.xml:$(TARGET_COPY_OUT_VENDOR)/etc/smomo_setting.xml
 
+# asteroids: skip generic display config samples and perf hint threshold if provided by device
+ifneq ($(TARGET_BOARD_PLATFORM),volcano)
 #SDR Dimming config file for vtdr6130, display id is 4630947039571902851
 PRODUCT_COPY_FILES += hardware/qcom/display/config/display_id_sample.xml:$(TARGET_COPY_OUT_VENDOR)/etc/displayconfig/display_id_4630947039571902851.xml
 PRODUCT_COPY_FILES += hardware/qcom/display/config/display_id_sample.xml:$(TARGET_COPY_OUT_VENDOR)/etc/displayconfig/display_id_4630947039571902850.xml
@@ -70,6 +75,7 @@ PRODUCT_COPY_FILES += hardware/qcom/display/config/display_id_sample.xml:$(TARGE
 
 #Perf hint threshold xml file
 PRODUCT_COPY_FILES += hardware/qcom/display/config/perf_hint_threshold.xml:$(TARGET_COPY_OUT_VENDOR)/etc/display/perf_hint_threshold.xml
+endif
 
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.demo.hdmirotationlock=false \
@@ -200,7 +206,12 @@ SOONG_CONFIG_qtidisplay := drmpp headless llvmsa \
                            composer_version smmu_proxy \
                            ubwcp_headers sixzone_version
 SOONG_CONFIG_qtidisplay += udfps samsung_udfps oplus_udfps
-SOONG_CONFIG_qtidisplay += pxlw_hw_iris7 pxlw_vendor_namespace
+ifneq ($(SOONG_CONFIG_qtidisplay_pxlw_hw_iris7),)
+SOONG_CONFIG_qtidisplay += pxlw_hw_iris7
+endif
+ifneq ($(SOONG_CONFIG_qtidisplay_pxlw_vendor_namespace),)
+SOONG_CONFIG_qtidisplay += pxlw_vendor_namespace
+endif
 
 # Soong Values
 SOONG_CONFIG_qtidisplay_drmpp := true
@@ -220,7 +231,7 @@ SOONG_CONFIG_qtidisplay_sixzone_version := v2
 SOONG_CONFIG_qtidisplay_udfps ?= false
 SOONG_CONFIG_qtidisplay_samsung_udfps ?= false
 SOONG_CONFIG_qtidisplay_oplus_udfps ?= false
-SOONG_CONFIG_qtidisplay_pxlw_hw_iris7 ?= false
+
 ifeq ($(TARGET_USES_COMPOSER3),true)
     SOONG_CONFIG_qtidisplay_composer_version := v3
     $(warning "Using composer3")
